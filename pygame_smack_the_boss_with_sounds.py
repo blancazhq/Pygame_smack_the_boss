@@ -168,6 +168,7 @@ def main():
             else:
                 screen.blit(start_button_image, (350, 270))
             pygame.display.update()
+            game_music.stop()
 
         characters = []
 
@@ -205,8 +206,9 @@ def main():
             boss4s.append(boss4)
 
         leveltick_start = pygame.time.get_ticks()
-
+        game_music.play(-1)
         while start == True and quit_game == False:
+
             next_level = False
             tick = pygame.time.get_ticks()
             leveltick = pygame.time.get_ticks()
@@ -346,7 +348,7 @@ def main():
             pygame.display.update()
 
             if num_boss1 <= 0 and num_boss2 <= 0 and num_boss3 <= 0 and num_boss4 <= 0:
-                sound = pygame.mixer.Sound('sounds/win.wav')
+                sound = pygame.mixer.Sound('sounds/level_complete.wav')
                 sound.play()
                 end_condition = 'win'
                 level_counter += 1
