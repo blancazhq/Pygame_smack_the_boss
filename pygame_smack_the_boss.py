@@ -33,18 +33,6 @@ class Boss(object):
     def get_location(self):
         return (self.x,self.y)
 
-    def move(self):
-        if self.x <= self.bounds[2] and self.y <= self.bounds[3] and self.x >= self.bounds[0] - self.dimensions[2] and self.y >= self.bounds[1] - self.dimensions[3]:
-            self.x += self.x_speed
-            self.y += self.y_speed
-        elif self.x > self.bounds[2]:
-            self.x = self.bounds[0] - self.dimensions[2]
-        elif self.y > self.bounds[3]:
-            self.y = self.bounds[1] - self.dimensions[3]
-        elif self.x < self.bounds[0] - self.dimensions[2]:
-            self.x = self.bounds[2]
-        elif self.y < self.bounds[3] - self.dimensions[3]:
-            self.y = self.bounds[3]
 
 class Boss1(Boss):
     def __init__(self,image,screen,others,tools):
@@ -125,6 +113,8 @@ def main():
 
     game_music = pygame.mixer.Sound('sounds/music.wav')
 
+    mallet1_image = pygame.image.load('images/mallet1.png').convert_alpha()
+    mallet2_image = pygame.image.load('images/mallet2.png').convert_alpha()
     start_banner_image = pygame.image.load('images/start_banner.png').convert_alpha()
     start_button_image = pygame.image.load('images/start_button.png').convert_alpha()
     level_complete_banner_image = pygame.image.load('images/level_complete_banner.png').convert_alpha()
@@ -143,7 +133,9 @@ def main():
     quit_game = False
     start = False
     next_level = False
-    game_music.play(-1)
+
+    smack_ticks = []
+    smack_locations = []
 
     tools = []
     exit = Exit(exit_image, screen)
@@ -212,10 +204,16 @@ def main():
             boss4s.append(boss4)
 
         leveltick_start = pygame.time.get_ticks()
+
         while start == True and quit_game == False:
             next_level = False
             tick = pygame.time.get_ticks()
             leveltick = pygame.time.get_ticks()
+            mouse_pos = list(pygame.mouse.get_pos())
+            mallet1_pos = [0, 0]
+            mallet1_pos[0] = mouse_pos[0] -15
+            mallet1_pos[1] = mouse_pos[1] -15
+            smack_location = (-100, -100)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     stop_game = True
@@ -224,6 +222,10 @@ def main():
                     for i in range(len(boss1s)):
                         if event.pos[0] in range(boss1s[i].get_location()[0], boss1s[i].get_location()[0]+boss1s[i].dimensions[2]) and event.pos[1] in range(boss1s[i].get_location()[1], boss1s[i].get_location()[1]+boss1.dimensions[3]):
                             num_boss1 -= 1
+                            smack_tick = pygame.time.get_ticks()
+                            smack_ticks.append(smack_tick)
+                            smack_location = boss1s[i].get_location()
+                            smack_locations.append(smack_location)
                             characters.remove(boss1s[i])
                             boss1s.remove(boss1s[i])
                             break
@@ -232,6 +234,10 @@ def main():
                             boss2s[i].click_needed -= 1
                             if boss2s[i].click_needed == 0:
                                 num_boss2 -= 1
+                                smack_tick = pygame.time.get_ticks()
+                                smack_ticks.append(smack_tick)
+                                smack_location = boss2s[i].get_location()
+                                smack_locations.append(smack_location)
                                 characters.remove(boss2s[i])
                                 boss2s.remove(boss2s[i])
                             break
@@ -240,6 +246,10 @@ def main():
                             boss3s[i].click_needed -= 1
                             if boss3s[i].click_needed == 0:
                                 num_boss3 -= 1
+                                smack_tick = pygame.time.get_ticks()
+                                smack_ticks.append(smack_tick)
+                                smack_location = boss3s[i].get_location()
+                                smack_locations.append(smack_location)
                                 characters.remove(boss3s[i])
                                 boss3s.remove(boss3s[i])
                             break
@@ -248,11 +258,16 @@ def main():
                             boss4s[i].click_needed -= 1
                             if boss4s[i].click_needed == 0:
                                 num_boss4 -= 1
+                                smack_tick = pygame.time.get_ticks()
+                                smack_ticks.append(smack_tick)
+                                smack_location = boss4s[i].get_location()
+                                smack_locations.append(smack_location)
                                 characters.remove(boss4s[i])
                                 boss4s.remove(boss4s[i])
                             break
                     if event.pos[0] in range(405, 475) and event.pos[1] in range(25, 50):
                         quit_game = True
+
 
             screen.blit(background_image, (0,0))
             screen.blit(exit.image, exit.get_location())
@@ -291,8 +306,18 @@ def main():
                 end_condition = 'lose'
                 level_counter = 1
                 break
+
             for i in characters:
                 screen.blit(i.image, i.get_location())
+
+            if smack_location == (-100, -100):
+                screen.blit(mallet1_image, mallet1_pos)
+
+            if smack_ticks != []:
+                if leveltick <= smack_ticks[-1] + 500:
+                    screen.blit(mallet2_image, smack_locations[-1])
+                    smack_tick = 0
+
             pygame.display.update()
 
             if num_boss1 <= 0 and num_boss2 <= 0 and num_boss3 <= 0 and num_boss4 <= 0:
@@ -352,15 +377,6 @@ def main():
                 screen.blit(start_button_image, (350, 270))
             pygame.display.update()
 
-"""
-        if tick > 2000:
-            monster.change_direction()
-            for i in goblins:
-                i.change_direction()
-            tick = 0
-
-        tick += clock.tick()
-"""
 
 pygame.quit()
 
