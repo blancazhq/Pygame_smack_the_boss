@@ -212,7 +212,7 @@ def main():
             mouse_pos = list(pygame.mouse.get_pos())
             mallet1_pos = [0, 0]
             mallet1_pos[0] = mouse_pos[0] -15
-            mallet1_pos[1] = mouse_pos[1] -15
+            mallet1_pos[1] = mouse_pos[1] -30
             smack_location = (-100, -100)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

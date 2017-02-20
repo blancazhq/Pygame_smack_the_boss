@@ -144,6 +144,7 @@ def main():
     tools.append(level_text)
     timer = Timer(timer1_image, screen)
     tools.append(timer)
+    game_music.play(-1)
 
     while quit_game == False:
 
@@ -212,7 +213,7 @@ def main():
             mouse_pos = list(pygame.mouse.get_pos())
             mallet1_pos = [0, 0]
             mallet1_pos[0] = mouse_pos[0] -15
-            mallet1_pos[1] = mouse_pos[1] -15
+            mallet1_pos[1] = mouse_pos[1] -30
             smack_location = (-100, -100)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -222,6 +223,12 @@ def main():
                     for i in range(len(boss1s)):
                         if event.pos[0] in range(boss1s[i].get_location()[0], boss1s[i].get_location()[0]+boss1s[i].dimensions[2]) and event.pos[1] in range(boss1s[i].get_location()[1], boss1s[i].get_location()[1]+boss1.dimensions[3]):
                             num_boss1 -= 1
+                            # try:
+                            #     sound = pygame.mixer.Sound('sounds/smack.ogg')
+                            #     sound.play()
+                            #     sound.stop()
+                            # except:
+                            #     pass
                             smack_tick = pygame.time.get_ticks()
                             smack_ticks.append(smack_tick)
                             smack_location = boss1s[i].get_location()
@@ -234,6 +241,12 @@ def main():
                             boss2s[i].click_needed -= 1
                             if boss2s[i].click_needed == 0:
                                 num_boss2 -= 1
+                                # try:
+                                #     sound1 = pygame.mixer.Sound('sounds/smack.ogg')
+                                #     sound1.play()
+                                #     sound1.stop()
+                                # except:
+                                #     pass
                                 smack_tick = pygame.time.get_ticks()
                                 smack_ticks.append(smack_tick)
                                 smack_location = boss2s[i].get_location()
@@ -246,6 +259,12 @@ def main():
                             boss3s[i].click_needed -= 1
                             if boss3s[i].click_needed == 0:
                                 num_boss3 -= 1
+                                # try:
+                                #     sound2 = pygame.mixer.Sound('sounds/smack.ogg')
+                                #     sound2.play()
+                                #     sound2.stop()
+                                # except:
+                                #     pass
                                 smack_tick = pygame.time.get_ticks()
                                 smack_ticks.append(smack_tick)
                                 smack_location = boss3s[i].get_location()
@@ -258,6 +277,12 @@ def main():
                             boss4s[i].click_needed -= 1
                             if boss4s[i].click_needed == 0:
                                 num_boss4 -= 1
+                                # try:
+                                #     sound3 = pygame.mixer.Sound('sounds/smack.ogg')
+                                #     sound3.play()
+                                #     sound3.stop()
+                                # except:
+                                #     pass
                                 smack_tick = pygame.time.get_ticks()
                                 smack_ticks.append(smack_tick)
                                 smack_location = boss4s[i].get_location()
@@ -301,7 +326,7 @@ def main():
             elif leveltick >= leveltick_start + 15000:
                 timer9 = Timer(timer9_image, screen)
                 screen.blit(timer9_image, timer9.get_location())
-                sound = pygame.mixer.Sound('sounds/lose.wav')
+                sound = pygame.mixer.Sound('sounds/lose.flac')
                 sound.play()
                 end_condition = 'lose'
                 level_counter = 1
@@ -327,7 +352,7 @@ def main():
                 level_counter += 1
                 break
 
-            game_music.stop()
+        game_music.stop()
 
         while start == True and end_condition == 'win' and quit_game == False:
             tick = pygame.time.get_ticks()
