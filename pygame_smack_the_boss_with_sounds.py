@@ -385,8 +385,6 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.pos[0] in range(350, 450) and event.pos[1] in range(285, 400):
                         next_level = True
-                        print next_level
-                        print level_counter
                         break
                     if event.pos[0] in range(405, 475) and event.pos[1] in range(25, 50):
                         quit_game = True
