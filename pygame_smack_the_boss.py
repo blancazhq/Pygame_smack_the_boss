@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 
 play_again = True
 level_counter = 1
@@ -18,6 +19,8 @@ class Boss(object):
         self.bounds = screen.get_rect()
         self.set_location(others,tools)
         self.direction_speed = 1
+        self.x_speed = random.choice([-1,1])
+        self.y_speed = random.choice([-1,1])
 
     def set_location(self,others,tools):
         self.x = random.randint(self.bounds[0],self.bounds[2] - self.dimensions[2])
@@ -33,6 +36,23 @@ class Boss(object):
     def get_location(self):
         return (self.x,self.y)
 
+    def move(self):
+        if self.x <= self.bounds[2] and self.y <= self.bounds[3] and self.x >= self.bounds[0] - self.dimensions[2] and self.y >= self.bounds[1] - self.dimensions[3]:
+            self.x += self.x_speed
+            self.y += self.y_speed
+        elif self.x > self.bounds[2]:
+            self.x = self.bounds[0] - self.dimensions[2]
+        elif self.y > self.bounds[3]:
+            self.y = self.bounds[1] - self.dimensions[3]
+        elif self.x < self.bounds[0] - self.dimensions[2]:
+            self.x = self.bounds[2]
+        elif self.y < self.bounds[3] - self.dimensions[3]:
+            self.y = self.bounds[3]
+
+    def change_direction(self):
+        self.x_speed *= self.direction_speed
+        self.y_speed *= self.direction_speed
+
 
 class Boss1(Boss):
     def __init__(self,image,screen,others,tools):
@@ -42,6 +62,8 @@ class Boss1(Boss):
         self.set_location(others,tools)
         self.direction_speed = 1
         self.click_needed = 1
+        self.x_speed = random.choice([-1,1])
+        self.y_speed = random.choice([-1,1])
 
 class Boss2(Boss):
     def __init__(self,image,screen,others,tools):
@@ -51,6 +73,8 @@ class Boss2(Boss):
         self.set_location(others,tools)
         self.direction_speed = 1
         self.click_needed = 2
+        self.x_speed = random.choice([-1,1])
+        self.y_speed = random.choice([-1,1])
 
 class Boss3(Boss):
     def __init__(self,image,screen,others,tools):
@@ -60,6 +84,8 @@ class Boss3(Boss):
         self.set_location(others,tools)
         self.direction_speed = 1
         self.click_needed = 3
+        self.x_speed = random.choice([-1,1])
+        self.y_speed = random.choice([-1,1])
 
 class Boss4(Boss):
     def __init__(self,image,screen,others,tools):
@@ -69,6 +95,8 @@ class Boss4(Boss):
         self.set_location(others,tools)
         self.direction_speed = 1
         self.click_needed = 4
+        self.x_speed = random.choice([-1,1])
+        self.y_speed = random.choice([-1,1])
 
 class Tool(object):
     def get_location(self):
@@ -172,7 +200,7 @@ def main():
 
         characters = []
 
-        num_boss1 = 1 + level_counter - 1
+        num_boss1 = 1 + int(math.floor(level_counter/2))
         boss1s = []
         boss1_image = pygame.image.load('images/boss1.png').convert_alpha()
         for i in xrange(num_boss1):
@@ -181,7 +209,7 @@ def main():
             boss1s.append(boss1)
 
 
-        num_boss2 = 1 + level_counter - 1
+        num_boss2 = 1 + int(math.floor(level_counter/2))
         boss2s = []
         boss2_image = pygame.image.load('images/boss2.png').convert_alpha()
         for i in xrange(num_boss2):
@@ -189,7 +217,7 @@ def main():
             characters.append(boss2)
             boss2s.append(boss2)
 
-        num_boss3 = 1 + level_counter - 1
+        num_boss3 = 1 + int(math.floor(level_counter/2))
         boss3s = []
         boss3_image = pygame.image.load('images/boss3.png').convert_alpha()
         for i in xrange(num_boss3):
@@ -197,7 +225,7 @@ def main():
             characters.append(boss3)
             boss3s.append(boss3)
 
-        num_boss4 = 1 + level_counter - 1
+        num_boss4 = 1 + int(math.floor(level_counter/2))
         boss4s = []
         boss4_image = pygame.image.load('images/boss4.png').convert_alpha()
         for i in xrange(num_boss4):
@@ -319,7 +347,14 @@ def main():
                 break
 
             for i in characters:
+                i.move()
+
+            for i in characters:
                 screen.blit(i.image, i.get_location())
+
+            if leveltick % 2000 == 0:
+                for i in characters:
+                    i.change_direction()
 
             if smack_location == (-100, -100):
                 screen.blit(mallet1_image, mallet1_pos)
